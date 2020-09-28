@@ -1,0 +1,17 @@
+{
+    "name": "ThreeDISevenZeroR.Stylist.Editor",
+    "references": [
+        "GUID:9c9cc85ab6be98544822eb363f3e879b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
