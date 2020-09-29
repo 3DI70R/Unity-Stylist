@@ -3,20 +3,22 @@ using UnityEngine.UI;
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledButton : StyledElement
+    public class StyledToggle : StyledElement
     {
-        public Button button;
+        public Toggle toggle;
         public Image background;
+        public Image checkmarkBackground;
+        public Image checkmark;
         public Text text;
-        public Image icon;
 
         protected override void ApplyStyle(ObjectStyleResolver<object> resolver)
         {
-            var style = resolver.As<ButtonStyleData>();
-            style.Apply(button);
+            var style = resolver.As<ToggleStyleData>();
+            style.Apply(toggle);
             style.As(d => d.background).Apply(background);
+            style.As(d => d.checkmarkBackground).Apply(checkmarkBackground);
+            style.As(d => d.checkmark).Apply(checkmark);
             style.As(d => d.text).Apply(text);
-            style.As(d => d.icon).Apply(icon);
         }
     }
 }

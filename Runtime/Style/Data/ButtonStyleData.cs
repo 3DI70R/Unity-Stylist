@@ -8,8 +8,8 @@ namespace ThreeDISevenZeroR.Stylist
     {
         [Space(0)]
         [Header("Button", order = 1)]
-        public StyleReference<ImageStyleData> backgroundStyle;
-        public StyleReference<TextStyleData> innerText;
-        public StyleReference<GraphicStyleData> innerGraphic;
+        public StyleReference<ImageStyleData> background;
+        public StyleReference<TextStyleData> text;
+        public StyleReference<ImageStyleData> icon;
     }
 }

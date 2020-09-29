@@ -1,4 +1,6 @@
-﻿namespace ThreeDISevenZeroR.Stylist
+﻿using UnityEngine;
+
+namespace ThreeDISevenZeroR.Stylist
 {
     public struct ResolvedProperty
     {
@@ -6,5 +8,6 @@
         public string group;
         public object value;
         public ElementStyle style;
+        public MonoBehaviour target;
     }
 }

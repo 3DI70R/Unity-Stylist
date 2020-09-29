@@ -14,36 +14,41 @@ namespace ThreeDISevenZeroR.Stylist
             set
             {
                 style = value;
-                ApplyStyle();
+                ApplyAssignedStyle();
             }
         }
-
-        public List<ResolvedStyle> ResolvedStyles { get; private set; }
-
+        
 #if UNITY_EDITOR
+        public List<ResolvedProperty> ResolvedProperties { get; private set; }
+        
         protected void Update()
         {
-            ApplyStyle();
+            if (Application.isPlaying)
+                return;
+
+            ApplyAssignedStyle();
         }
 #endif
 
-        private void ApplyStyle()
+        private void ApplyAssignedStyle()
         {
-            if (Application.isPlaying || !Style)
+            if(!Style)
                 return;
 
-            if (ResolvedStyles == null)
-            {
-                ResolvedStyles = new List<ResolvedStyle>();
-            }
-            else
-            {
-                ResolvedStyles.Clear();
-            }
-
-            ApplyStyle(ResolvedStyles);
+            var resolver = new ObjectStyleResolver<object>(new StyleResolver<object>(style));
+            ApplyStyle(resolver);
+            ResolvedProperties = resolver.GetResult();
         }
 
-        protected abstract void ApplyStyle(List<ResolvedStyle> outProperties);
+        public void ApplyStyleFromParent<T>(ObjectStyleResolver<T> resolver)
+            where T : new()
+        {
+            if(style) // keep assigned style
+                return;
+
+            ApplyStyle(resolver.As<object>());
+        }
+
+        protected abstract void ApplyStyle(ObjectStyleResolver<object> resolver);
     }
 }

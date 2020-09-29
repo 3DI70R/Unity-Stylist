@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    [CreateAssetMenu(menuName = GraphicStyle.MenuCategory + "Graphic", order = 100)]
+    [CreateAssetMenu(menuName = ElementStyle.MenuCategory + nameof(Graphic), order = 100)]
     public class GraphicStyle : ElementStyle<GraphicStyleData> { }
 }

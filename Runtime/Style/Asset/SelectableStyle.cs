@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    [CreateAssetMenu(menuName = SelectableStyle.MenuCategory + "Selectable", order = 100)]
+    [CreateAssetMenu(menuName = ElementStyle.MenuCategory + nameof(Selectable), order = 100)]
     public class SelectableStyle : ElementStyle<SelectableStyleData> { }
 }

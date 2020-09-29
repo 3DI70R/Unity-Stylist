@@ -77,15 +77,18 @@ namespace ThreeDISevenZeroR.Stylist
         private static bool EnumerateStyle(ElementStyle asset, object overrides, ElementStyle[] inherits,
             Func<ElementStyle, object, bool> enumerator)
         {
-            if (enumerator(asset, overrides))
+            if (overrides != null && enumerator(asset, overrides))
                 return true;
 
-            for (var i = inherits.Length - 1; i >= 0; i--)
+            if (inherits != null)
             {
-                var style = inherits[i];
+                for (var i = inherits.Length - 1; i >= 0; i--)
+                {
+                    var style = inherits[i];
 
-                if (EnumerateStyle(style, style.Overrides, style.Inherits, enumerator))
-                    return true;
+                    if (EnumerateStyle(style, style.Overrides, style.Inherits, enumerator))
+                        return true;
+                }
             }
 
             return false;

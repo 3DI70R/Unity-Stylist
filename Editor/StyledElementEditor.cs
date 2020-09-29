@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace ThreeDISevenZeroR.Stylist
@@ -6,9 +7,9 @@ namespace ThreeDISevenZeroR.Stylist
     [CustomEditor(typeof(StyledElement), true)]
     public class StyledElementEditor : Editor
     {
-        private static bool hideDefault;
-        
         private const string defaultOriginName = "Default";
+        private static bool showDefaultProperties = false;
+        private MonoBehaviour lastClickedBehaviour;
         
         public override void OnInspectorGUI()
         {
@@ -18,11 +19,11 @@ namespace ThreeDISevenZeroR.Stylist
 
             if (target is StyledElement element)
             {
-                if(element.ResolvedStyles == null)
+                if(element.ResolvedProperties == null)
                     return;
                 
                 EditorGUILayout.LabelField("Resolved properties", EditorStyles.centeredGreyMiniLabel);
-                //hideDefault = EditorGUILayout.Toggle("Hide default properties", hideDefault);
+                showDefaultProperties = EditorGUILayout.ToggleLeft("Show unassigned values", showDefaultProperties);
 
                 var labelStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
@@ -31,19 +32,30 @@ namespace ThreeDISevenZeroR.Stylist
 
                 var currentGroup = "";
                 
-                foreach (var typeProperties in element.ResolvedStyles)
+                foreach (var typeProperties in element.ResolvedProperties.GroupBy(e => e.target))
                 {
-                    var typeName = typeProperties.target.gameObject.name + "#" + typeProperties.target.GetType().Name;
+                    var propertiesToShow = (showDefaultProperties
+                        ? typeProperties
+                        : typeProperties.Where(p => p.style != null)).ToList();
                     
-                    EditorGUILayout.Space();
-                    EditorGUILayout.LabelField($"{typeName} properties:", EditorStyles.miniLabel);
-                    EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                    
-                    foreach (var property in typeProperties.properties)
-                    {
-                        if(!property.style && hideDefault)
-                            continue;
+                    if(propertiesToShow.Count == 0)
+                        continue;
 
+                    var targetComponent = typeProperties.Key;
+                    var typeName = targetComponent.gameObject.name + "#" + targetComponent.GetType().Name;
+                    
+                    EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+                    var clickableRect = EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
+                    if (GUI.Button(clickableRect, $"{typeName}", new GUIStyle(EditorStyles.miniButtonMid)))
+                    {
+                        EditorGUIUtility.PingObject(targetComponent);
+                    }
+                    
+                    EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+
+                    foreach (var property in propertiesToShow)
+                    {
                         if (currentGroup != property.group)
                         {
                             currentGroup = property.group;

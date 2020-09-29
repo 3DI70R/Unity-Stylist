@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace ThreeDISevenZeroR.Stylist
+﻿namespace ThreeDISevenZeroR.Stylist
 {
     public struct PropertyInfo<T>
     {
