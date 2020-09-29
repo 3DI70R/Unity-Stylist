@@ -28,6 +28,8 @@ namespace ThreeDISevenZeroR.Stylist
                 {
                     richText = true
                 };
+
+                var currentGroup = "";
                 
                 foreach (var typeProperties in element.ResolvedStyles)
                 {
@@ -42,6 +44,17 @@ namespace ThreeDISevenZeroR.Stylist
                         if(!property.style && hideDefault)
                             continue;
 
+                        if (currentGroup != property.group)
+                        {
+                            currentGroup = property.group;
+                            
+                            var headerRect = EditorGUILayout.BeginHorizontal();
+                            EditorGUILayout.LabelField(property.group, EditorStyles.centeredGreyMiniLabel);
+                            EditorGUI.DrawRect(new Rect(headerRect.x, headerRect.yMax - 2, headerRect.width, 2), 
+                                new Color(0, 0, 0, 0.1f));
+                            EditorGUILayout.EndHorizontal();
+                        }
+
                         var rect = EditorGUILayout.BeginHorizontal();
                         var originName = defaultOriginName;
 
@@ -51,9 +64,10 @@ namespace ThreeDISevenZeroR.Stylist
                             EditorGUI.DrawRect(rect, new Color(0, 1f, 0f, 0.1f));
                         }
 
+                        var fullName = property.name;
                         var fullValue = $"{originName}, {property.value ?? "null"}";
                         
-                        EditorGUILayout.LabelField(property.name, fullValue, labelStyle);
+                        EditorGUILayout.LabelField(fullName, fullValue, labelStyle);
                         EditorGUILayout.EndHorizontal();
                     }
                     

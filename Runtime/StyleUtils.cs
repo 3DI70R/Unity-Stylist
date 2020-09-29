@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -27,37 +26,43 @@ namespace ThreeDISevenZeroR.Stylist
 
         private static void ApplyGraphicStyle(LoggingResolver<GraphicStyleData> style, Graphic graphic)
         {
-            graphic.color = style.Resolve(d => d.color);
-            graphic.material = style.Resolve(d => d.material);
+            style.BeginGroup("Graphic");
+            
+            graphic.color = style.Resolve("Color", d => d.color);
+            graphic.material = style.Resolve("Material", d => d.material);
 
             ApplyShadow(style, graphic);
         }
 
         private static void ApplyImageStyle(LoggingResolver<ImageStyleData> style, Image image)
         {
-            image.sprite = style.Resolve(d => d.sprite);
+            style.BeginGroup("Image");
+            
+            image.sprite = style.Resolve("Sprite", d => d.sprite);
             
             ApplyGraphicStyle(style.As<GraphicStyleData>(), image);
         }
 
         private static void ApplyTextStyle(LoggingResolver<TextStyleData> style, Text text)
         {
-            var fontValue = style.Resolve(d => d.font);
+            style.BeginGroup("Text");
+            
+            var fontValue = style.Resolve("Font", d => d.font);
             
             if (fontValue.value)
                 text.font = fontValue;
 
-            text.fontStyle = style.Resolve(d => d.fontStyle);
-            text.fontSize = style.Resolve(d => d.fontSize);
-            text.lineSpacing = style.Resolve(d => d.lineSpacing);
-            text.supportRichText = style.Resolve(d => d.richText);
-            text.alignment = style.Resolve(d => d.alignment);
-            text.alignByGeometry = style.Resolve(d => d.alignByGeometry);
-            text.horizontalOverflow = style.Resolve(d => d.horizontalOverflow);
-            text.verticalOverflow = style.Resolve(d => d.verticalOverflow);
-            text.resizeTextForBestFit = style.Resolve(d => d.bestFit);
-            text.resizeTextMinSize = style.Resolve(d => d.bestFitMinSize);
-            text.resizeTextMaxSize = style.Resolve(d => d.bestFitMaxSize);
+            text.fontStyle = style.Resolve("Font style", d => d.fontStyle);
+            text.fontSize = style.Resolve("Font size", d => d.fontSize);
+            text.lineSpacing = style.Resolve("Line spacing", d => d.lineSpacing);
+            text.supportRichText = style.Resolve("Rich text", d => d.richText);
+            text.alignment = style.Resolve("Alignment", d => d.alignment);
+            text.alignByGeometry = style.Resolve("Align by geometry", d => d.alignByGeometry);
+            text.horizontalOverflow = style.Resolve("Horizontal overflow", d => d.horizontalOverflow);
+            text.verticalOverflow = style.Resolve("Vertical overflow", d => d.verticalOverflow);
+            text.resizeTextForBestFit = style.Resolve("Best fit", d => d.bestFit);
+            text.resizeTextMinSize = style.Resolve("Min size (Best fit)", d => d.bestFitMinSize);
+            text.resizeTextMaxSize = style.Resolve("Max size (Best fit)", d => d.bestFitMaxSize);
             
             ApplyGraphicStyle(style.As<GraphicStyleData>(), text);
         }
@@ -69,14 +74,16 @@ namespace ThreeDISevenZeroR.Stylist
 
         private static void ApplySelectableStyle(LoggingResolver<SelectableStyleData> style, Selectable button)
         {
+            style.BeginGroup("Color block");
+            
             var colorBlock = button.colors;
-            colorBlock.normalColor = style.Resolve(d => d.colorNormal);
-            colorBlock.highlightedColor = style.Resolve(d => d.colorHighlighted);
-            colorBlock.pressedColor = style.Resolve(d => d.colorPressed);
-            colorBlock.selectedColor = style.Resolve(d => d.colorSelected);
-            colorBlock.disabledColor = style.Resolve(d => d.colorDisabled); 
-            colorBlock.colorMultiplier = style.Resolve(d => d.colorMultiplier);
-            colorBlock.fadeDuration = style.Resolve(d => d.colorFadeDuration);
+            colorBlock.normalColor = style.Resolve("Normal color", d => d.colorNormal);
+            colorBlock.highlightedColor = style.Resolve("Highlighted color", d => d.colorHighlighted);
+            colorBlock.pressedColor = style.Resolve("Pressed color", d => d.colorPressed);
+            colorBlock.selectedColor = style.Resolve("Selected color", d => d.colorSelected);
+            colorBlock.disabledColor = style.Resolve("Disabled color", d => d.colorDisabled); 
+            colorBlock.colorMultiplier = style.Resolve("Color multiplier", d => d.colorMultiplier);
+            colorBlock.fadeDuration = style.Resolve("Color fade duration", d => d.colorFadeDuration);
             button.colors = colorBlock;
         }
 
@@ -84,8 +91,10 @@ namespace ThreeDISevenZeroR.Stylist
         {
             var gameObject = graphicObject.gameObject;
             var shadow = gameObject.GetComponent<Shadow>();
+            
+            style.BeginGroup("Shadow");
 
-            switch (style.Resolve(d => d.shadowType).value)
+            switch (style.Resolve("Shadow type", d => d.shadowType).value)
             {
                 case GraphicStyleData.ShadowType.None:
                     if (shadow)
@@ -118,8 +127,8 @@ namespace ThreeDISevenZeroR.Stylist
             if (!shadow)
                 return;
 
-            shadow.effectColor = style.Resolve(d => d.shadowColor);
-            shadow.effectDistance = style.Resolve(d => d.shadowDistance);
+            shadow.effectColor = style.Resolve("Shadow color", d => d.shadowColor);
+            shadow.effectDistance = style.Resolve("Shadow distance", d => d.shadowDistance);
         }
 
         private static void ApplyLayout(LoggingResolver<ElementStyleData> style, MonoBehaviour behaviour)
@@ -130,12 +139,14 @@ namespace ThreeDISevenZeroR.Stylist
 
         private static void ApplyLayoutElement(LoggingResolver<ElementStyleData> style, MonoBehaviour behaviour)
         {
-            var minWidth = style.Resolve(d => d.layout.minWidth);
-            var minHeight = style.Resolve(d => d.layout.minHeight);
-            var preferredWidth = style.Resolve(d => d.layout.preferredWidth);
-            var preferredHeight = style.Resolve(d => d.layout.preferredHeight);
-            var flexibleWidth = style.Resolve(d => d.layout.flexibleWidth);
-            var flexibleHeight = style.Resolve(d => d.layout.flexibleHeight);
+            style.BeginGroup("Layout element");
+            
+            var minWidth = style.Resolve("Min width", d => d.layout.minWidth);
+            var minHeight = style.Resolve("Min height", d => d.layout.minHeight);
+            var preferredWidth = style.Resolve("Preferred width", d => d.layout.preferredWidth);
+            var preferredHeight = style.Resolve("Preferred height", d => d.layout.preferredHeight);
+            var flexibleWidth = style.Resolve("Flexible width", d => d.layout.flexibleWidth);
+            var flexibleHeight = style.Resolve("Flexible height", d => d.layout.flexibleHeight);
 
             var useLayout = minWidth.IsAssigned || minHeight.IsAssigned || 
                             preferredWidth.IsAssigned || preferredHeight.IsAssigned || 
@@ -154,8 +165,10 @@ namespace ThreeDISevenZeroR.Stylist
 
         private static void ApplyContentSizeFitter(LoggingResolver<ElementStyleData> style, MonoBehaviour behaviour)
         {
-            var horizontalFit = style.Resolve(d => d.layout.horizontalFit);
-            var verticalFit = style.Resolve(d => d.layout.verticalFit);
+            style.BeginGroup("Content size fitter");
+            
+            var horizontalFit = style.Resolve("Horizontal fit", d => d.layout.horizontalFit);
+            var verticalFit = style.Resolve("Vertical fit", d => d.layout.verticalFit);
 
             var useFitter = horizontalFit.IsAssigned || verticalFit.IsAssigned;
             
@@ -241,20 +254,23 @@ namespace ThreeDISevenZeroR.Stylist
             }
         }
 
-        private readonly struct LoggingResolver<T>
+        private struct LoggingResolver<T>
             where T : new()
         {
             private readonly StyleResolver<T> resolver;
             private readonly List<ResolvedProperty> properties;
             private readonly MonoBehaviour behaviour;
+            private string currentGroup;
 
             private LoggingResolver(StyleResolver<T> resolver, 
                 List<ResolvedProperty> properties, 
-                MonoBehaviour target)
+                MonoBehaviour target,
+                string currentGroup)
             {
                 this.resolver = resolver;
                 this.properties = properties;
                 this.behaviour = target;
+                this.currentGroup = currentGroup;
             }
             
             public LoggingResolver(StyleResolver<T> resolver, MonoBehaviour behaviour)
@@ -262,21 +278,24 @@ namespace ThreeDISevenZeroR.Stylist
                 this.resolver = resolver;
                 this.behaviour = behaviour;
                 properties = new List<ResolvedProperty>();
+                this.currentGroup = null;
             }
 
             public LoggingResolver<TNew> As<TNew>() where TNew : new() => 
-                new LoggingResolver<TNew>(resolver.As<TNew>(), properties, behaviour);
+                new LoggingResolver<TNew>(resolver.As<TNew>(), properties, behaviour, currentGroup);
 
-            public StyleProperty<P> Resolve<P>(Expression<Func<T, StyleProperty<P>>> propertyGetter)
+            public void BeginGroup(string name)
             {
-                var memberName = (propertyGetter.Body is MemberExpression memberExpression)
-                    ? memberExpression.Member.Name
-                    : "unknown";
-
-                var property = resolver.Resolve(propertyGetter.Compile());
+                currentGroup = name;
+            }
+            
+            public StyleProperty<P> Resolve<P>(String name, Func<T, StyleProperty<P>> propertyGetter)
+            {
+                var property = resolver.Resolve(propertyGetter);
                 properties.Add(new ResolvedProperty
                 {
-                    name = memberName,
+                    name = name,
+                    group = currentGroup,
                     value = property.value.value,
                     style = property.style
                 });
