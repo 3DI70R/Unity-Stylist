@@ -35,7 +35,7 @@ namespace ThreeDISevenZeroR.Stylist
                     return false;
                 
                 var style = nestedStyleGetter(tData);
-                return EnumerateStyle(asset, style.overrides, style.inherits, enumerator);
+                return EnumerateStyle(asset, style.overrides, style.inherits.array, enumerator);
             }));
         }
 

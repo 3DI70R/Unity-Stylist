@@ -6,7 +6,7 @@ namespace ThreeDISevenZeroR.Stylist
     public struct StyleReference<O> 
         where O : ElementStyleData
     {
-        public ElementStyle[] inherits;
+        public InheritedStyles inherits;
         public O overrides;
     }
 }

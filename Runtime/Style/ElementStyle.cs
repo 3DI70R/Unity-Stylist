@@ -7,10 +7,10 @@ namespace ThreeDISevenZeroR.Stylist
         protected const string MenuCategory = "UI Style (Stylist)/";
         
 #pragma warning disable 649
-        [SerializeField] private ElementStyle[] inherits;
+        [SerializeField] private InheritedStyles inherits;
 #pragma warning restore 649
         
-        public ElementStyle[] Inherits => inherits;
+        public ElementStyle[] Inherits => inherits.array;
         public abstract ElementStyleData Overrides { get; }
     }
     
