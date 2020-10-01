@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ThreeDISevenZeroR.Stylist
 {
     [ExecuteInEditMode]
-    public abstract class StyledElement : MonoBehaviour
+    public abstract class StyledElement<T> : MonoBehaviour
+        where T : ElementStyleData, new()
     {
         [SerializeField] private ElementStyle style;
 
@@ -19,8 +19,6 @@ namespace ThreeDISevenZeroR.Stylist
         }
         
 #if UNITY_EDITOR
-        public List<ResolvedProperty> ResolvedProperties { get; private set; }
-        
         protected void Update()
         {
             if (Application.isPlaying)
@@ -35,20 +33,19 @@ namespace ThreeDISevenZeroR.Stylist
             if(!Style)
                 return;
 
-            var resolver = new ObjectStyleResolver<object>(new StyleResolver<object>(style));
-            ApplyStyle(resolver);
-            ResolvedProperties = resolver.GetResult();
+            StyleUtils.ClearTrackedObjects();
+            ApplyStyle(Style.Resolve<T>());
         }
 
-        public void ApplyStyleFromParent<T>(ObjectStyleResolver<T> resolver)
-            where T : new()
+        public void ApplyStyleFromParent(T parentStyle)
         {
-            if(style) // keep assigned style
+            // ignore parent style if style already assigned by element
+            if(style || parentStyle == null) 
                 return;
 
-            ApplyStyle(resolver.As<object>());
+            ApplyStyle(parentStyle);
         }
 
-        protected abstract void ApplyStyle(ObjectStyleResolver<object> resolver);
+        protected abstract void ApplyStyle(T style);
     }
 }

@@ -8,6 +8,8 @@ namespace ThreeDISevenZeroR.Stylist
     [CustomPropertyDrawer(typeof(InheritedStyles))]
     public class StyleInheritancePropertyDrawer : PropertyDrawer
     {
+        private readonly string listTitle = "Inherits";
+
         private static readonly float topSpacing = EditorGUIUtility.singleLineHeight / 2f;
         
         private ReorderableList list;
@@ -39,10 +41,7 @@ namespace ThreeDISevenZeroR.Stylist
 
             listObject = property.serializedObject;
             list = new ReorderableList(property.serializedObject, arrayProperty, true, false, true, true);
-            list.drawHeaderCallback += rect =>
-            {
-                EditorGUI.LabelField(rect, "Inherits");
-            };
+            list.drawHeaderCallback += rect => { EditorGUI.LabelField(rect, listTitle); };
             list.drawElementCallback += (rect, i, isActive, isFocused) =>
             {
                 EditorGUI.PropertyField(rect, arrayProperty.GetArrayElementAtIndex(i), new GUIContent());

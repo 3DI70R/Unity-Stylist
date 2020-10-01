@@ -10,29 +10,42 @@ namespace ThreeDISevenZeroR.Stylist
         
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty enumProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.type));
-            SerializedProperty valueProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.value));
+            SerializedProperty enumProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.applyType));
+            SerializedProperty valueProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.ownValue));
+            SerializedProperty resolvedProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.resolvedValue));
+            SerializedProperty resolvedAssetProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.resolvedAsset));
 
             var indentedRect = EditorGUI.IndentedRect(position); // to fix weird clickable region
             var overridePosition = Rect.MinMaxRect(position.xMin, position.yMin, indentedRect.xMin + toggleWidth, position.yMax);
             var valuePosition = new Rect(position.x + toggleWidth, position.y, position.width - toggleWidth, position.height);
+            
             var oldEnabled = GUI.enabled;
-            var type = enumProperty.enumValueIndex;
-
-            var enumType = (PropertyApplyType) type;
+            var enumType = (PropertyApplyType) enumProperty.enumValueIndex;
             var isEnabled = enumType == PropertyApplyType.Assigned;
+            var resolvedAsset = (ElementStyle) resolvedAssetProperty.objectReferenceValue;
+            var showResolvedValue = enumType == PropertyApplyType.Unassigned && resolvedAsset;
+            
             var highlightRect = position;
-            highlightRect.y -= 1;
-            highlightRect.height += 2;
+            highlightRect.xMin -= 1000;
+            highlightRect.xMax += 1000;
+            highlightRect.yMin -= 1;
+            highlightRect.yMax += 1;
 
-            if (enumType == PropertyApplyType.Clear)
+            switch (enumType)
             {
-                EditorGUI.DrawRect(highlightRect, new Color(1f, 0, 0, 0.1f));
-                EditorGUI.showMixedValue = true;
-            }
-            else if (enumType == PropertyApplyType.Assigned)
-            {
-                EditorGUI.DrawRect(highlightRect, new Color(0, 1f, 0, 0.1f));
+                case PropertyApplyType.Assigned:
+                    EditorGUI.DrawRect(highlightRect, ElementStyleEditor.assignedColor);
+                    break;
+                
+                case PropertyApplyType.Clear:
+                    EditorGUI.DrawRect(highlightRect, ElementStyleEditor.clearColor);
+                    EditorGUI.showMixedValue = true;
+                    break;
+                
+                case PropertyApplyType.Unassigned:
+                    if(showResolvedValue)
+                        EditorGUI.DrawRect(highlightRect, ElementStyleEditor.inheritedColor);
+                    break;
             }
 
             if (isEnabled != EditorGUI.Toggle(overridePosition, isEnabled))
@@ -41,22 +54,34 @@ namespace ThreeDISevenZeroR.Stylist
                 index++;
 
                 if (index >= enumProperty.enumNames.Length)
-                {
                     index = 0;
-                }
-                
+
                 enumProperty.enumValueIndex = index;
             }
+            
             EditorGUI.showMixedValue = false;
             
             if (!isEnabled)
                 GUI.enabled = false;
+
+            var name = showResolvedValue 
+                ? $"{property.displayName} ({resolvedAsset.name})" 
+                : property.displayName;
+
+            var value = showResolvedValue
+                ? resolvedProperty
+                : valueProperty;
             
-            EditorGUI.PropertyField(valuePosition, valueProperty, 
-                new GUIContent(property.displayName), false);
+            EditorGUI.PropertyField(valuePosition, value, new GUIContent(name), false);
             
             if (!isEnabled)
                 GUI.enabled = oldEnabled;
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            SerializedProperty valueProperty = property.FindPropertyRelative(nameof(StyleProperty<object>.ownValue));
+            return EditorGUI.GetPropertyHeight(valueProperty, label);
         }
     }
 }

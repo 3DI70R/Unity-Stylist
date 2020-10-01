@@ -3,24 +3,23 @@ using Image = UnityEngine.UI.Image;
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledScrollRect : StyledElement
+    public class StyledScrollRect : StyledElement<ScrollRectStyleData>
     {
         public ScrollRect scrollView;
         public Image background;
         public StyledScrollbar horizontalScrollbar;
         public StyledScrollbar verticalScrollbar;
 
-        protected override void ApplyStyle(ObjectStyleResolver<object> resolver)
+        protected override void ApplyStyle(ScrollRectStyleData style)
         {
-            var style = resolver.As<ScrollRectStyleData>();
-            style.Apply(scrollView);
-            style.As(d => d.background).Apply(background);
+            StyleUtils.Apply(style, scrollView);
+            StyleUtils.Apply(style.background, background);
+
+            if (horizontalScrollbar)
+                horizontalScrollbar.ApplyStyleFromParent(style.scrollBar);
             
-            if(horizontalScrollbar)
-                horizontalScrollbar.ApplyStyleFromParent(style.As(d => d.scrollBar));
-            
-            if(verticalScrollbar)
-                verticalScrollbar.ApplyStyleFromParent(style.As(d => d.scrollBar));
+            if (verticalScrollbar)
+                verticalScrollbar.ApplyStyleFromParent(style.scrollBar);
         }
     }
 }

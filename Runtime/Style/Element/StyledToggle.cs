@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledToggle : StyledElement
+    public class StyledToggle : StyledElement<ToggleStyleData>
     {
         public Toggle toggle;
         public Image background;
@@ -11,14 +10,13 @@ namespace ThreeDISevenZeroR.Stylist
         public Image checkmark;
         public Text text;
 
-        protected override void ApplyStyle(ObjectStyleResolver<object> resolver)
+        protected override void ApplyStyle(ToggleStyleData style)
         {
-            var style = resolver.As<ToggleStyleData>();
-            style.Apply(toggle);
-            style.As(d => d.background).Apply(background);
-            style.As(d => d.checkmarkBackground).Apply(checkmarkBackground);
-            style.As(d => d.checkmark).Apply(checkmark);
-            style.As(d => d.text).Apply(text);
+            StyleUtils.Apply(style, toggle);
+            StyleUtils.Apply(style.background, background);
+            StyleUtils.Apply(style.checkmarkBackground, checkmarkBackground);
+            StyleUtils.Apply(style.checkmark, checkmark);
+            StyleUtils.Apply(style.text, text);
         }
     }
 }

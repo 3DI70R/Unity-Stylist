@@ -14,5 +14,18 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleReference<ImageStyleData> checkmarkBackground;
         public StyleReference<ImageStyleData> checkmark;
         public StyleReference<TextStyleData> text;
+
+        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        {
+            base.Resolve(resolver);
+
+            var toggleResolver = resolver.ForType<ToggleStyleData>();
+            toggleResolver.Resolve(ref toggleTransition, d => d.toggleTransition);
+            
+            toggleResolver.Resolve(ref background, d => d.background);
+            toggleResolver.Resolve(ref checkmarkBackground, d => d.checkmarkBackground);
+            toggleResolver.Resolve(ref checkmark, d => d.checkmark);
+            toggleResolver.Resolve(ref text, d => d.text);
+        }
     }
 }

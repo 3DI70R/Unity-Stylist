@@ -26,5 +26,26 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleProperty<Sprite> spritePressed;
         public StyleProperty<Sprite> spriteSelected;
         public StyleProperty<Sprite> spriteDisabled;
+
+        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        {
+            base.Resolve(resolver);
+
+            var selectableData = resolver.ForType<SelectableStyleData>();
+            selectableData.Resolve(ref transition, d => d.transition);
+            
+            selectableData.Resolve(ref colorNormal, d => d.colorNormal);
+            selectableData.Resolve(ref colorHighlighted, d => d.colorHighlighted);
+            selectableData.Resolve(ref colorPressed, d => d.colorPressed);
+            selectableData.Resolve(ref colorSelected, d => d.colorSelected);
+            selectableData.Resolve(ref colorDisabled, d => d.colorDisabled);
+            selectableData.Resolve(ref colorMultiplier, d => d.colorMultiplier);
+            selectableData.Resolve(ref colorFadeDuration, d => d.colorFadeDuration);
+            
+            selectableData.Resolve(ref spriteHighlighted, d => d.spriteHighlighted);
+            selectableData.Resolve(ref spritePressed, d => d.spritePressed);
+            selectableData.Resolve(ref spriteSelected, d => d.spriteSelected);
+            selectableData.Resolve(ref spriteDisabled, d => d.spriteDisabled);
+        }
     }
 }

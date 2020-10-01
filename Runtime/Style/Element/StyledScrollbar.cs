@@ -2,18 +2,17 @@
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledScrollbar : StyledElement
+    public class StyledScrollbar : StyledElement<ScrollbarStyleData>
     {
         public Scrollbar scrollbar;
         public Image background;
         public Image handle;
         
-        protected override void ApplyStyle(ObjectStyleResolver<object> resolver)
+        protected override void ApplyStyle(ScrollbarStyleData style)
         {
-            var style = resolver.As<ScrollbarStyleData>();
-            style.Apply(scrollbar);
-            style.As(d => d.background).Apply(background);
-            style.As(d => d.handle).Apply(handle);
+            StyleUtils.Apply(style, scrollbar);
+            StyleUtils.Apply(style.background, background);
+            StyleUtils.Apply(style.handle, handle);
         }
     }
 }

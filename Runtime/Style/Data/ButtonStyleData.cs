@@ -11,5 +11,15 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleReference<ImageStyleData> background;
         public StyleReference<TextStyleData> text;
         public StyleReference<ImageStyleData> icon;
+
+        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        {
+            base.Resolve(resolver);
+
+            var buttonResolver = resolver.ForType<ButtonStyleData>();
+            buttonResolver.Resolve(ref background, d => d.background);
+            buttonResolver.Resolve(ref text, d => d.text);
+            buttonResolver.Resolve(ref icon, d => d.icon);
+        }
     }
 }

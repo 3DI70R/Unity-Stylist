@@ -7,35 +7,29 @@ namespace ThreeDISevenZeroR.Stylist
     [Serializable]
     public class ElementStyleData
     {
-        public Layout layout = Layout.GetDefault();
-        
-        [Serializable]
-        public struct Layout
-        {
-            [Header("Layout Element")]
-            public StyleProperty<int> minWidth;
-            public StyleProperty<int> minHeight;
-            public StyleProperty<int> preferredWidth;
-            public StyleProperty<int> preferredHeight;
-            public StyleProperty<int> flexibleWidth;
-            public StyleProperty<int> flexibleHeight;
+        [Header("Layout Element")] 
+        public StyleProperty<int> minWidth = -1;
+        public StyleProperty<int> minHeight = -1;
+        public StyleProperty<int> preferredWidth = -1;
+        public StyleProperty<int> preferredHeight = -1;
+        public StyleProperty<int> flexibleWidth = -1;
+        public StyleProperty<int> flexibleHeight = -1;
             
-            [Header("Content Size Fitter")]
-            public StyleProperty<ContentSizeFitter.FitMode> horizontalFit;
-            public StyleProperty<ContentSizeFitter.FitMode> verticalFit;
+        [Header("Content Size Fitter")]
+        public StyleProperty<ContentSizeFitter.FitMode> horizontalFit;
+        public StyleProperty<ContentSizeFitter.FitMode> verticalFit;
 
-            public static Layout GetDefault()
-            {
-                return new Layout
-                {
-                    minWidth = -1,
-                    minHeight = -1,
-                    preferredWidth = -1,
-                    preferredHeight = -1,
-                    flexibleWidth = -1,
-                    flexibleHeight = -1,
-                };
-            }
+        public virtual void Resolve(StyleResolver<ElementStyleData> resolver)
+        {
+            resolver.Resolve(ref minWidth, d => d.minWidth);
+            resolver.Resolve(ref minHeight, d => d.minHeight);
+            resolver.Resolve(ref preferredWidth, d => d.preferredWidth);
+            resolver.Resolve(ref preferredHeight, d => d.preferredHeight);
+            resolver.Resolve(ref flexibleWidth, d => d.flexibleWidth);
+            resolver.Resolve(ref flexibleHeight, d => d.flexibleHeight);
+            
+            resolver.Resolve(ref horizontalFit, d => d.horizontalFit);
+            resolver.Resolve(ref verticalFit, d => d.verticalFit);
         }
     }
 }
