@@ -29,6 +29,9 @@ namespace ThreeDISevenZeroR.Stylist
             scrollResolver.Resolve(ref inertia, d => d.inertia);
             scrollResolver.Resolve(ref decelerationRate, d => d.decelerationRate);
             scrollResolver.Resolve(ref scrollSensitivity, d => d.scrollSensitivity);
+            
+            scrollResolver.Resolve(ref background, d => d.background);
+            scrollResolver.Resolve(ref scrollBar, d => d.scrollBar);
         }
     }
 }
