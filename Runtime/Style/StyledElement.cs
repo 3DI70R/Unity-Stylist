@@ -3,12 +3,13 @@
 namespace ThreeDISevenZeroR.Stylist
 {
     [ExecuteInEditMode]
-    public abstract class StyledElement<T> : MonoBehaviour
+    public abstract class StyledElement<S, T> : MonoBehaviour
+        where S : ElementStyle<T>
         where T : ElementStyleData, new()
     {
-        [SerializeField] private ElementStyle style;
+        [SerializeField] private S style;
 
-        public ElementStyle Style
+        public S Style
         {
             get => style;
             set
@@ -21,8 +22,8 @@ namespace ThreeDISevenZeroR.Stylist
 #if UNITY_EDITOR
         protected void Update()
         {
-            if (Application.isPlaying)
-                return;
+            /*if (Application.isPlaying)
+                return;*/
 
             ApplyAssignedStyle();
         }

@@ -2,12 +2,12 @@
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledButton : StyledElement<ButtonStyleData>
+    public class StyledButton : StyledElement<ButtonStyle, ButtonStyleData>
     {
-        public Button button;
-        public Image background;
-        public Text text;
-        public Image icon;
+        public UIReference<Button> button;
+        public UIReference<Image> background;
+        public UIReference<Text> text;
+        public UIReference<Image> icon;
 
         protected override void ApplyStyle(ButtonStyleData style)
         {

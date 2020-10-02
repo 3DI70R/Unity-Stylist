@@ -2,13 +2,13 @@
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledToggle : StyledElement<ToggleStyleData>
+    public class StyledToggle : StyledElement<ToggleStyle, ToggleStyleData>
     {
-        public Toggle toggle;
-        public Image background;
-        public Image checkmarkBackground;
-        public Image checkmark;
-        public Text text;
+        public UIReference<Toggle> toggle;
+        public UIReference<Image> background;
+        public UIReference<Image> checkmarkBackground;
+        public UIReference<Image> checkmark;
+        public UIReference<Text> text;
 
         protected override void ApplyStyle(ToggleStyleData style)
         {

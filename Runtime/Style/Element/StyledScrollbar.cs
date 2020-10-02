@@ -2,11 +2,11 @@
 
 namespace ThreeDISevenZeroR.Stylist
 {
-    public class StyledScrollbar : StyledElement<ScrollbarStyleData>
+    public class StyledScrollbar : StyledElement<ScrollbarStyle, ScrollbarStyleData>
     {
-        public Scrollbar scrollbar;
-        public Image background;
-        public Image handle;
+        public UIReference<Scrollbar> scrollbar;
+        public UIReference<Image> background;
+        public UIReference<Image> handle;
         
         protected override void ApplyStyle(ScrollbarStyleData style)
         {

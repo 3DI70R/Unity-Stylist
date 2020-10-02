@@ -13,109 +13,128 @@ namespace ThreeDISevenZeroR.Stylist
     {
         private static readonly Stack<HashSet<object>> hashSetPool = new Stack<HashSet<object>>();
         private static readonly HashSet<object> visitedObjectsSet = new HashSet<object>();
-        
-        public static void Apply(ButtonStyleData style, params Button[] buttons) => 
-            ApplyStyle(style, buttons, ApplyButtonStyle);
 
-        public static void Apply(ImageStyleData style, params Image[] images) =>
-            ApplyStyle(style, images, Apply);
-        
-        public static void Apply(TextStyleData style, params Text[] texts) =>
-            ApplyStyle(style, texts, ApplyTextStyle);
-        
-        public static void Apply(GraphicStyleData style, params Graphic[] texts) =>
-            ApplyStyle(style, texts, ApplyGraphicStyle);
-        
-        public static void Apply(ToggleStyleData style, params Toggle[] toggles) =>
-            ApplyStyle(style, toggles, ApplyToggleStyle);
+        public delegate void StyleApplyFunc<S, T>(S style, UIReference<T> reference) 
+            where T : MonoBehaviour;
 
-        public static void Apply(ScrollRectStyleData style, params ScrollRect[] scrolls) =>
-            ApplyStyle(style, scrolls, ApplyScrollRectStyle);
+        private static readonly StyleApplyFunc<ButtonStyleData, Button> applyButton = ApplyButtonStyle;
+        private static readonly StyleApplyFunc<ImageStyleData, Image> applyImage = ApplyImageStyle;
+        private static readonly StyleApplyFunc<TextStyleData, Text> applyText = ApplyTextStyle;
+        private static readonly StyleApplyFunc<GraphicStyleData, Graphic> applyGraphic = ApplyGraphicStyle;
+        private static readonly StyleApplyFunc<ToggleStyleData, Toggle> applyToggle = ApplyToggleStyle;
+        private static readonly StyleApplyFunc<ScrollRectStyleData, ScrollRect> applyScrollRect = ApplyScrollRectStyle;
+        private static readonly StyleApplyFunc<ScrollbarStyleData, Scrollbar> applyScrollBar = ApplyScrollbarStyle;
+
+        public static void Apply(ButtonStyleData style, UIReference<Button> buttons) => 
+            ApplyStyle(style, buttons, applyButton);
         
-        public static void Apply(ScrollbarStyleData style, params Scrollbar[] scrolls) =>
-            ApplyStyle(style, scrolls, ApplyScrollbarStyle);
+        public static void Apply(ImageStyleData style, UIReference<Image> images) => 
+            ApplyStyle(style, images, applyImage);
+        
+        public static void Apply(TextStyleData style, UIReference<Text> texts) => 
+            ApplyStyle(style, texts, applyText);
+        
+        public static void Apply(GraphicStyleData style, UIReference<Graphic> texts) => 
+            ApplyStyle(style, texts, applyGraphic);
+        
+        public static void Apply(ToggleStyleData style, UIReference<Toggle> toggles) => 
+            ApplyStyle(style, toggles, applyToggle);
+        
+        public static void Apply(ScrollRectStyleData style, UIReference<ScrollRect> scrolls) => 
+            ApplyStyle(style, scrolls, applyScrollRect);
+        
+        public static void Apply(ScrollbarStyleData style, UIReference<Scrollbar> scrolls) => 
+            ApplyStyle(style, scrolls, applyScrollBar);
 
         public static void ClearTrackedObjects()
         {
             visitedObjectsSet.Clear();
         }
 
-        private static void ApplyGraphicStyle(GraphicStyleData style, Graphic graphic)
+        private static void ApplyGraphicStyle<T>(GraphicStyleData style, UIReference<T> reference)
+            where T : Graphic
         {
-            graphic.color = style.color;
-            graphic.material = style.material;
+            reference.value.color = style.color;
+            reference.value.material = style.material;
 
-            ApplyShadow(style, graphic);
+            ApplyShadow(style, reference);
         }
 
-        private static void Apply(ImageStyleData style, Image image)
+        private static void ApplyImageStyle<T>(ImageStyleData style, UIReference<T> reference)
+            where T : Image
         {
-            image.sprite = style.sprite;
-            image.preserveAspect = style.preserveAspect;
-            image.fillCenter = style.fillCenter;
-            image.useSpriteMesh = style.useSpriteMesh;
-            image.pixelsPerUnitMultiplier = style.pixelsPerUnitMultiplier;
+            reference.value.sprite = style.sprite;
+            reference.value.preserveAspect = style.preserveAspect;
+            reference.value.fillCenter = style.fillCenter;
+            reference.value.useSpriteMesh = style.useSpriteMesh;
+            reference.value.pixelsPerUnitMultiplier = style.pixelsPerUnitMultiplier;
             
-            ApplyGraphicStyle(style, image);
+            ApplyGraphicStyle(style, reference);
         }
 
-        private static void ApplyTextStyle(TextStyleData style, Text text)
+        private static void ApplyTextStyle<T>(TextStyleData style, UIReference<T> reference)
+            where T : Text
         {
             var fontValue = style.font.resolvedValue;
             
             if (fontValue)
-                text.font = fontValue;
+                reference.value.font = fontValue;
 
-            text.fontStyle = style.fontStyle;
-            text.fontSize = style.fontSize;
-            text.lineSpacing = style.lineSpacing;
-            text.supportRichText = style.richText;
-            text.alignment = style.alignment;
-            text.alignByGeometry = style.alignByGeometry;
-            text.horizontalOverflow = style.horizontalOverflow;
-            text.verticalOverflow = style.verticalOverflow;
-            text.resizeTextForBestFit = style.bestFit;
-            text.resizeTextMinSize = style.bestFitMinSize;
-            text.resizeTextMaxSize = style.bestFitMaxSize;
+            reference.value.fontStyle = style.fontStyle;
+            reference.value.fontSize = style.fontSize;
+            reference.value.lineSpacing = style.lineSpacing;
+            reference.value.supportRichText = style.richText;
+            reference.value.alignment = style.alignment;
+            reference.value.alignByGeometry = style.alignByGeometry;
+            reference.value.horizontalOverflow = style.horizontalOverflow;
+            reference.value.verticalOverflow = style.verticalOverflow;
+            reference.value.resizeTextForBestFit = style.bestFit;
+            reference.value.resizeTextMinSize = style.bestFitMinSize;
+            reference.value.resizeTextMaxSize = style.bestFitMaxSize;
             
-            ApplyGraphicStyle(style, text);
+            ApplyGraphicStyle(style, reference);
         }
 
-        private static void ApplyButtonStyle(ButtonStyleData style, Button button)
+        private static void ApplyButtonStyle<T>(ButtonStyleData style, UIReference<T> reference)
+            where T : Button
         {
-            ApplySelectableStyle(style, button);
+            ApplySelectableStyle(style, reference);
         }
         
-        private static void ApplyScrollRectStyle(ScrollRectStyleData style, ScrollRect scroll)
+        private static void ApplyScrollRectStyle<T>(ScrollRectStyleData style, UIReference<T> reference)
+            where T : ScrollRect
         {
-            scroll.movementType = style.movementType;
-            scroll.elasticity = style.elasticity;
-            scroll.inertia = style.inertia;
-            scroll.decelerationRate = style.decelerationRate;
-            scroll.scrollSensitivity = style.scrollSensitivity;
+            reference.value.movementType = style.movementType;
+            reference.value.elasticity = style.elasticity;
+            reference.value.inertia = style.inertia;
+            reference.value.decelerationRate = style.decelerationRate;
+            reference.value.scrollSensitivity = style.scrollSensitivity;
         }
 
-        private static void ApplyScrollbarStyle(ScrollbarStyleData style, Scrollbar scroll)
+        private static void ApplyScrollbarStyle<T>(ScrollbarStyleData style, UIReference<T> reference)
+            where T : Scrollbar
         {
-            ApplySelectableStyle(style, scroll);
+            ApplySelectableStyle(style, reference);
         }
 
-        private static void ApplyToggleStyle(ToggleStyleData style, Toggle toggle)
+        private static void ApplyToggleStyle<T>(ToggleStyleData style, UIReference<T> reference)
+            where T : Toggle
         {
-            toggle.toggleTransition = style.toggleTransition;
+            reference.value.toggleTransition = style.toggleTransition;
             
-            ApplySelectableStyle(style, toggle);
+            ApplySelectableStyle(style, reference);
         }
 
-        private static void ApplySelectableStyle(SelectableStyleData style, Selectable button)
+        private static void ApplySelectableStyle<T>(SelectableStyleData style, UIReference<T> reference)
+            where T : Selectable
         {
-            button.transition = style.transition;
+            reference.value.transition = style.transition;
 
-            switch (button.transition)
+            switch (reference.value.transition)
             {
                 case Selectable.Transition.ColorTint:
                 {
-                    var colorBlock = button.colors;
+                    var colorBlock = reference.value.colors;
                     var originalBlock = colorBlock;
                     colorBlock.normalColor = style.colorNormal;
                     colorBlock.highlightedColor = style.colorHighlighted;
@@ -126,13 +145,13 @@ namespace ThreeDISevenZeroR.Stylist
                     colorBlock.fadeDuration = style.colorFadeDuration;
                     
                     if(!colorBlock.Equals(originalBlock))
-                        button.colors = colorBlock;
+                        reference.value.colors = colorBlock;
                     
                     break;
                 }
                 case Selectable.Transition.SpriteSwap:
                 {
-                    var spriteBlock = button.spriteState;
+                    var spriteBlock = reference.value.spriteState;
                     var originalBlock = spriteBlock;
                     spriteBlock.selectedSprite = style.spriteSelected;
                     spriteBlock.highlightedSprite = style.spriteHighlighted;
@@ -140,56 +159,60 @@ namespace ThreeDISevenZeroR.Stylist
                     spriteBlock.disabledSprite = style.spriteDisabled;
                     
                     if (!spriteBlock.Equals(originalBlock))
-                        button.spriteState = spriteBlock;
+                        reference.value.spriteState = spriteBlock;
                     
                     break;
                 }
             }
         }
 
-        private static void ApplyShadow(GraphicStyleData style, Graphic graphicObject)
+        private static void ApplyShadow<T>(GraphicStyleData style, UIReference<T> reference)
+            where T : Graphic
         {
-            var gameObject = graphicObject.gameObject;
-            var shadow = gameObject.GetComponent<Shadow>();
+            var gameObject = reference.value.gameObject;
 
             switch (style.shadowType.resolvedValue)
             {
                 case GraphicStyleData.ShadowType.None:
-                    if (shadow)
+                    if (reference.shadowComponent)
                     {
-                        Object.DestroyImmediate(shadow);
-                        shadow = null;
+                        Object.DestroyImmediate(reference.shadowComponent);
+                        reference.shadowComponent = null;
                     }
 
                     break;
 
                 case GraphicStyleData.ShadowType.Shadow:
-                    if (!shadow || shadow.GetType() != typeof(Shadow))
+                    if (!reference.shadowComponent || reference.shadowComponent.GetType() != typeof(Shadow))
                     {
-                        Object.DestroyImmediate(shadow);
-                        shadow = gameObject.AddComponent<Shadow>();
+                        Object.DestroyImmediate(reference.shadowComponent);
+                        reference.shadowComponent = gameObject.AddComponent<Shadow>();
                     }
 
                     break;
 
                 case GraphicStyleData.ShadowType.Outline:
-                    if (!shadow || shadow.GetType() != typeof(Outline))
+                    if (!reference.shadowComponent || reference.shadowComponent.GetType() != typeof(Outline))
                     {
-                        Object.DestroyImmediate(shadow);
-                        shadow = gameObject.AddComponent<Outline>();
+                        Object.DestroyImmediate(reference.shadowComponent);
+                        reference.shadowComponent = gameObject.AddComponent<Outline>();
                     }
 
                     break;
             }
 
-            if (!shadow)
+            if (!reference.shadowComponent)
                 return;
 
-            shadow.effectColor = style.shadowColor;
-            shadow.effectDistance = style.shadowDistance;
+            if(reference.shadowComponent.effectColor != style.shadowColor) 
+                reference.shadowComponent.effectColor = style.shadowColor;
+            
+            if(reference.shadowComponent.effectDistance != style.shadowDistance) 
+                reference.shadowComponent.effectDistance = style.shadowDistance;
         }
 
-        private static void ApplyLayout(ElementStyleData style, MonoBehaviour behaviour)
+        private static void ApplyLayout<T>(ElementStyleData style, UIReference<T> behaviour)
+            where T : MonoBehaviour
         {
             if (visitedObjectsSet.Add(style))
             {
@@ -198,7 +221,8 @@ namespace ThreeDISevenZeroR.Stylist
             }
         }
 
-        private static void ApplyLayoutElement(ElementStyleData style, MonoBehaviour behaviour)
+        private static void ApplyLayoutElement<T>(ElementStyleData style, UIReference<T> reference)
+            where T : MonoBehaviour
         {
             var minWidth = style.minWidth;
             var minHeight = style.minHeight;
@@ -212,18 +236,19 @@ namespace ThreeDISevenZeroR.Stylist
                             preferredWidth >= 0 || preferredHeight >= 0 || 
                             flexibleWidth >= 0 || flexibleHeight >= 0;
 
-            if (behaviour.UpdateComponent<LayoutElement>(useLayout, out var layoutElement))
+            if (UpdateComponent(ref reference.layoutElement, useLayout))
             {
-                layoutElement.minWidth = minWidth;
-                layoutElement.minHeight = minHeight;
-                layoutElement.preferredWidth = preferredWidth;
-                layoutElement.preferredHeight = preferredHeight;
-                layoutElement.flexibleWidth = flexibleWidth;
-                layoutElement.flexibleHeight = flexibleHeight;
+                reference.layoutElement.minWidth = minWidth;
+                reference.layoutElement.minHeight = minHeight;
+                reference.layoutElement.preferredWidth = preferredWidth;
+                reference.layoutElement.preferredHeight = preferredHeight;
+                reference.layoutElement.flexibleWidth = flexibleWidth;
+                reference.layoutElement.flexibleHeight = flexibleHeight;
             }
         }
 
-        private static void ApplyContentSizeFitter(ElementStyleData style, MonoBehaviour behaviour)
+        private static void ApplyContentSizeFitter<T>(ElementStyleData style, UIReference<T> reference)
+            where T : MonoBehaviour
         {
             var horizontalFit = style.horizontalFit;
             var verticalFit = style.verticalFit;
@@ -231,43 +256,42 @@ namespace ThreeDISevenZeroR.Stylist
             var useFitter = horizontalFit != ContentSizeFitter.FitMode.Unconstrained || 
                             verticalFit != ContentSizeFitter.FitMode.Unconstrained;
             
-            if (behaviour.UpdateComponent<ContentSizeFitter>(useFitter, out var fitter))
+            if (UpdateComponent(ref reference.sizeFitter, useFitter))
             {
-                fitter.horizontalFit = horizontalFit;
-                fitter.verticalFit = verticalFit;
+                reference.sizeFitter.horizontalFit = horizontalFit;
+                reference.sizeFitter.verticalFit = verticalFit;
             }
         }
 
-        private static bool UpdateComponent<T>(this MonoBehaviour behaviour, bool isActive, out T component)
+        private static bool UpdateComponent<T>(ref T behaviour, bool isActive)
             where T : Component
         {
-            behaviour.TryGetComponent(out component);
-
             if (isActive)
             {
-                if (!component)
-                    component = behaviour.gameObject.AddComponent<T>();
+                if (!behaviour)
+                    behaviour = behaviour.gameObject.AddComponent<T>();
 
                 return true;
             }
 
-            Object.DestroyImmediate(component);
-            component = null;
+            if (behaviour)
+            {
+                Object.DestroyImmediate(behaviour);
+                behaviour = null;
+            }
+            
             return false;
         }
 
-        private static void ApplyStyle<S, T>(S style, T[] data, Action<S, T> apply)
+        private static void ApplyStyle<S, T>(S style, UIReference<T> data, StyleApplyFunc<S, T> apply)
             where S : ElementStyleData, new()
             where T : MonoBehaviour
         {
-            foreach (var d in data)
-            {
-                if(!d)
-                    continue;
+            if(!data.value)
+                return;
 
-                apply(style, d);
-                ApplyLayout(style, d);
-            }
+            apply(style, data);
+            ApplyLayout(style, data);
         }
 
         public static HashSet<object> GetPooledHashSet()
