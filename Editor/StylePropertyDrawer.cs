@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using System;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace ThreeDISevenZeroR.Stylist
@@ -64,9 +66,14 @@ namespace ThreeDISevenZeroR.Stylist
             
             if (!isEnabled)
                 GUI.enabled = false;
-
+            
+            // get asset file name as .name is not always same as asset file name (for example, if file has dot in name)
+            var resolvedAssetName = resolvedAsset 
+                ? Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(resolvedAsset))
+                : "";
+            
             var name = showResolvedValue && resolvedAsset
-                ? $"{property.displayName} ({resolvedAsset.name})" 
+                ? $"{property.displayName} ({resolvedAssetName})" 
                 : property.displayName;
 
             var value = showResolvedValue

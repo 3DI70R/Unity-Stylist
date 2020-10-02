@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ThreeDISevenZeroR.Stylist
+﻿namespace ThreeDISevenZeroR.Stylist
 {
     public class StyleData
     {
