@@ -113,14 +113,12 @@ namespace ThreeDISevenZeroR.Stylist
                     return false;
                 }
 
-                EnumerateRecursive(asset, overrides, inherits);
+                return EnumerateRecursive(asset, overrides, inherits);
             }
             finally
             {
                 StyleUtils.ReturnHashSet(visitedObjectsSet);
             }
-
-            return false;
         }
     }
 }
