@@ -10,12 +10,13 @@ namespace ThreeDISevenZeroR.Stylist
         [Header("Toggle")]
         public StyleProperty<Toggle.ToggleTransition> toggleTransition;
 
+        [Header("References")]
         public StyleReference<ImageStyleData> background;
         public StyleReference<ImageStyleData> checkmarkBackground;
         public StyleReference<ImageStyleData> checkmark;
         public StyleReference<TextStyleData> text;
 
-        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        public override void Resolve(StyleResolver<StyleData> resolver)
         {
             base.Resolve(resolver);
 

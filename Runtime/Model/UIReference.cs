@@ -10,13 +10,17 @@ namespace ThreeDISevenZeroR.Stylist
     {
         public T value;
         
-        public Shadow shadowComponent;
+        // Cached properties
+        // also UIReferencePropertyDrawer assigns those on value change, so if object already had one of these
+        // it will be automatically picked
+        public Shadow shadow;
         public LayoutElement layoutElement;
         public ContentSizeFitter sizeFitter;
 
-        public static implicit operator bool(UIReference<T> reference)
-        {
-            return reference != null && reference.value;
-        }
+        public static implicit operator T(UIReference<T> reference) => reference?.value;
+        public static implicit operator UIReference<T>(T value) => new UIReference<T> { value = value };
+
+        public static implicit operator bool(UIReference<T> reference) => 
+            reference != null && reference.value;
     }
 }

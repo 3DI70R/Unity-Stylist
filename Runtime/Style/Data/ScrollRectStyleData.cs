@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ThreeDISevenZeroR.Stylist
@@ -13,10 +14,11 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleProperty<float> decelerationRate = 0.135f;
         public StyleProperty<float> scrollSensitivity = 1f;
         
+        [Header("References")]
         public StyleReference<ImageStyleData> background;
         public StyleReference<ScrollbarStyleData> scrollBar;
 
-        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        public override void Resolve(StyleResolver<StyleData> resolver)
         {
             base.Resolve(resolver);
 

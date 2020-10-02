@@ -18,7 +18,7 @@ namespace ThreeDISevenZeroR.Stylist
         private readonly Dictionary<Type, object> resolvedObjectsCache 
             = new Dictionary<Type, object>();
         
-        public D Resolve<D>() where D : ElementStyleData, new()
+        public D Resolve<D>() where D : StyleData, new()
         {
             var type = typeof(D);
 
@@ -26,18 +26,19 @@ namespace ThreeDISevenZeroR.Stylist
                 return (D) cachedValue;
 
             var newInstance = new D();
-            newInstance.Resolve(new StyleResolver<ElementStyleData>(this));
+            newInstance.Resolve(new StyleResolver<StyleData>(this));
             resolvedObjectsCache[type] = newInstance;
             return newInstance;
         }
         
 #if UNITY_EDITOR
+        public virtual Type DataType { get; }
         public abstract void ResolveSelf();
 #endif
     }
     
     public abstract class ElementStyle<T> : ElementStyle
-        where T : ElementStyleData
+        where T : ElementStyleData, new()
     {
 #pragma warning disable 649
         [FlattenAttribute]
@@ -47,9 +48,11 @@ namespace ThreeDISevenZeroR.Stylist
         public override ElementStyleData Overrides => overrides;
 
 #if UNITY_EDITOR
+        public override Type DataType => typeof(T);
+
         public override void ResolveSelf()
         {
-            overrides.Resolve(new StyleResolver<ElementStyleData>(this));
+            overrides?.Resolve(new StyleResolver<StyleData>(this));
         }
 #endif
     }

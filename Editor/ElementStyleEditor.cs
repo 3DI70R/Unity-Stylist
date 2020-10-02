@@ -24,6 +24,9 @@ namespace ThreeDISevenZeroR.Stylist
         
         public override void OnInspectorGUI()
         {
+            if (!(target is ElementStyle elementStyle))
+                return;
+            
             void DrawLegend(String name, String description, Color color)
             {
                 var rect = EditorGUILayout.BeginVertical(new GUIStyle { padding = new RectOffset(8, 8, 4, 4) });
@@ -33,14 +36,18 @@ namespace ThreeDISevenZeroR.Stylist
                 EditorGUILayout.EndVertical();
             }
 
-            if (target is ElementStyle elementStyle)
-            {
-                elementStyle.ResolveSelf();
-                EditorUtility.SetDirty(elementStyle);
-                serializedObject.Update();
-            }
+            elementStyle.ResolveSelf();
+            EditorUtility.SetDirty(elementStyle);
+            serializedObject.Update();
 
             base.OnInspectorGUI();
+
+            if (!elementStyle.DataType.IsSerializable)
+            {
+                EditorGUILayout.HelpBox(
+                    $"Data of type {elementStyle.DataType.Name} should have [Serializable] attribute", 
+                    MessageType.Error);
+            }
             
             EditorGUILayout.LabelField(legendLabel, EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);

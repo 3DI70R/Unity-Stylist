@@ -3,6 +3,7 @@
 namespace ThreeDISevenZeroR.Stylist
 {
     [ExecuteInEditMode]
+    [DefaultExecutionOrder(-1000)]
     public abstract class StyledElement<S, T> : MonoBehaviour
         where S : ElementStyle<T>
         where T : ElementStyleData, new()
@@ -18,12 +19,17 @@ namespace ThreeDISevenZeroR.Stylist
                 ApplyAssignedStyle();
             }
         }
-        
+
+        private void Awake()
+        {
+            ApplyAssignedStyle();
+        }
+
 #if UNITY_EDITOR
         protected void Update()
         {
-            /*if (Application.isPlaying)
-                return;*/
+            if (Application.isPlaying)
+                return;
 
             ApplyAssignedStyle();
         }

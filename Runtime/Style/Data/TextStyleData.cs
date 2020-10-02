@@ -25,7 +25,7 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleProperty<int> bestFitMinSize = defaultFontData.minSize;
         public StyleProperty<int> bestFitMaxSize = defaultFontData.maxSize;
 
-        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        public override void Resolve(StyleResolver<StyleData> resolver)
         {
             base.Resolve(resolver);
 

@@ -14,7 +14,7 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleProperty<bool> useSpriteMesh = false;
         public StyleProperty<float> pixelsPerUnitMultiplier = 1f;
 
-        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        public override void Resolve(StyleResolver<StyleData> resolver)
         {
             base.Resolve(resolver);
 

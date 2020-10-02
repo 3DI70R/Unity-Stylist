@@ -34,6 +34,11 @@ namespace ThreeDISevenZeroR.Stylist
         public ElementStyle resolvedAsset;
 
         /// <summary>
+        /// Is value default or resolved from asset
+        /// </summary>
+        public bool IsResolved => resolvedAsset;
+
+        /// <summary>
         /// Used in initialization, creates unassigned property with default value
         /// </summary>
         public static implicit operator StyleProperty<P>(P value) => 

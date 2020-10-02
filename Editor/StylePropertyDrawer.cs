@@ -23,7 +23,8 @@ namespace ThreeDISevenZeroR.Stylist
             var enumType = (PropertyApplyType) enumProperty.enumValueIndex;
             var isEnabled = enumType == PropertyApplyType.Assigned;
             var resolvedAsset = (ElementStyle) resolvedAssetProperty.objectReferenceValue;
-            var showResolvedValue = enumType == PropertyApplyType.Unassigned && resolvedAsset;
+            var showResolvedValue = enumType == PropertyApplyType.Unassigned ||
+                                    enumType == PropertyApplyType.Clear;
             
             var highlightRect = position;
             highlightRect.xMin -= 1000;
@@ -43,7 +44,7 @@ namespace ThreeDISevenZeroR.Stylist
                     break;
                 
                 case PropertyApplyType.Unassigned:
-                    if(showResolvedValue)
+                    if(resolvedAsset)
                         EditorGUI.DrawRect(highlightRect, ElementStyleEditor.inheritedColor);
                     break;
             }
@@ -64,7 +65,7 @@ namespace ThreeDISevenZeroR.Stylist
             if (!isEnabled)
                 GUI.enabled = false;
 
-            var name = showResolvedValue 
+            var name = showResolvedValue && resolvedAsset
                 ? $"{property.displayName} ({resolvedAsset.name})" 
                 : property.displayName;
 

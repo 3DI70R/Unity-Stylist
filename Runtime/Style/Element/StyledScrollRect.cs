@@ -7,8 +7,8 @@ namespace ThreeDISevenZeroR.Stylist
     {
         public UIReference<ScrollRect> scrollView;
         public UIReference<Image> background;
-        public UIReference<StyledScrollbar> horizontalScrollbar;
-        public UIReference<StyledScrollbar> verticalScrollbar;
+        public StyledScrollbar horizontalScrollbar;
+        public StyledScrollbar verticalScrollbar;
 
         protected override void ApplyStyle(ScrollRectStyleData style)
         {
@@ -16,10 +16,10 @@ namespace ThreeDISevenZeroR.Stylist
             StyleUtils.Apply(style.background, background);
 
             if (horizontalScrollbar)
-                horizontalScrollbar.value.ApplyStyleFromParent(style.scrollBar);
+                horizontalScrollbar.ApplyStyleFromParent(style.scrollBar);
 
             if (verticalScrollbar)
-                verticalScrollbar.value.ApplyStyleFromParent(style.scrollBar);
+                verticalScrollbar.ApplyStyleFromParent(style.scrollBar);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace ThreeDISevenZeroR.Stylist
 {
     [Serializable]
     public struct StyleReference<O> 
-        where O : ElementStyleData, new()
+        where O : StyleData, new()
     {
         public InheritedStyles inherits;
         

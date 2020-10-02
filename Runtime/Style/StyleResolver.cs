@@ -26,10 +26,10 @@ namespace ThreeDISevenZeroR.Stylist
         }
 
         public void Resolve<TNew>(ref StyleReference<TNew> styleToResolve, Func<T, StyleReference<TNew>> nestedStyleGetter)
-            where TNew : ElementStyleData, new()
+            where TNew : StyleData, new()
         {
             var currentEnumerator = dataEnumerator;
-            var innerResolver = new StyleResolver<ElementStyleData>(enumerator => currentEnumerator((asset, data) =>
+            var innerResolver = new StyleResolver<StyleData>(enumerator => currentEnumerator((asset, data) =>
             {
                 if (data is T tData)
                 {

@@ -1,6 +1,6 @@
 {
   "name": "ru.threedisevenzeror.stylist",
-  "version": "0.8.6",
+  "version": "0.9.0",
   "displayName": "Stylist",
   "description": "Styling library for UGUI",
   "unity": "2020.1",
@@ -10,7 +10,7 @@
 	"Library"
   ],
   "author": {
-    "name": "ThreeDISevenZeroR",
+    "name": "3DI70R",
     "email": "ThreeDISevenZeroR@gmail.com"
   },
   "type": "library"

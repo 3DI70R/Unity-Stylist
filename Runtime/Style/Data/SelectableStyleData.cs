@@ -27,7 +27,7 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleProperty<Sprite> spriteSelected;
         public StyleProperty<Sprite> spriteDisabled;
 
-        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        public override void Resolve(StyleResolver<StyleData> resolver)
         {
             base.Resolve(resolver);
 

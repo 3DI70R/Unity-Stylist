@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
@@ -14,7 +13,7 @@ namespace ThreeDISevenZeroR.Stylist
         private static readonly Stack<HashSet<object>> hashSetPool = new Stack<HashSet<object>>();
         private static readonly HashSet<object> visitedObjectsSet = new HashSet<object>();
 
-        public delegate void StyleApplyFunc<S, T>(S style, UIReference<T> reference) 
+        private delegate void StyleApplyFunc<S, T>(S style, UIReference<T> reference) 
             where T : MonoBehaviour;
 
         private static readonly StyleApplyFunc<ButtonStyleData, Button> applyButton = ApplyButtonStyle;
@@ -24,27 +23,39 @@ namespace ThreeDISevenZeroR.Stylist
         private static readonly StyleApplyFunc<ToggleStyleData, Toggle> applyToggle = ApplyToggleStyle;
         private static readonly StyleApplyFunc<ScrollRectStyleData, ScrollRect> applyScrollRect = ApplyScrollRectStyle;
         private static readonly StyleApplyFunc<ScrollbarStyleData, Scrollbar> applyScrollBar = ApplyScrollbarStyle;
+        private static readonly StyleApplyFunc<InputFieldStyleData, InputField> applyInputField = ApplyInputFieldStyle;
+        private static readonly StyleApplyFunc<SliderStyleData, Slider> applySlider = ApplySliderStyle;
+        private static readonly StyleApplyFunc<DropdownStyleData, Dropdown> applyDropdown = ApplyDropdownStyle;
 
-        public static void Apply(ButtonStyleData style, UIReference<Button> buttons) => 
-            ApplyStyle(style, buttons, applyButton);
+        public static void Apply(ButtonStyleData style, UIReference<Button> button) => 
+            ApplyStyle(style, button, applyButton);
         
-        public static void Apply(ImageStyleData style, UIReference<Image> images) => 
-            ApplyStyle(style, images, applyImage);
+        public static void Apply(ImageStyleData style, UIReference<Image> image) => 
+            ApplyStyle(style, image, applyImage);
         
-        public static void Apply(TextStyleData style, UIReference<Text> texts) => 
-            ApplyStyle(style, texts, applyText);
+        public static void Apply(TextStyleData style, UIReference<Text> text) => 
+            ApplyStyle(style, text, applyText);
         
-        public static void Apply(GraphicStyleData style, UIReference<Graphic> texts) => 
-            ApplyStyle(style, texts, applyGraphic);
+        public static void Apply(GraphicStyleData style, UIReference<Graphic> graphic) => 
+            ApplyStyle(style, graphic, applyGraphic);
         
-        public static void Apply(ToggleStyleData style, UIReference<Toggle> toggles) => 
-            ApplyStyle(style, toggles, applyToggle);
+        public static void Apply(ToggleStyleData style, UIReference<Toggle> toggle) => 
+            ApplyStyle(style, toggle, applyToggle);
         
-        public static void Apply(ScrollRectStyleData style, UIReference<ScrollRect> scrolls) => 
-            ApplyStyle(style, scrolls, applyScrollRect);
+        public static void Apply(ScrollRectStyleData style, UIReference<ScrollRect> scroll) => 
+            ApplyStyle(style, scroll, applyScrollRect);
         
-        public static void Apply(ScrollbarStyleData style, UIReference<Scrollbar> scrolls) => 
-            ApplyStyle(style, scrolls, applyScrollBar);
+        public static void Apply(ScrollbarStyleData style, UIReference<Scrollbar> scroll) => 
+            ApplyStyle(style, scroll, applyScrollBar);
+
+        public static void Apply(InputFieldStyleData style, UIReference<InputField> field) =>
+            ApplyStyle(style, field, applyInputField);
+        
+        public static void Apply(SliderStyleData style, UIReference<Slider> field) =>
+            ApplyStyle(style, field, applySlider);
+        
+        public static void Apply(DropdownStyleData style, UIReference<Dropdown> field) =>
+            ApplyStyle(style, field, applyDropdown);
 
         public static void ClearTrackedObjects()
         {
@@ -98,6 +109,33 @@ namespace ThreeDISevenZeroR.Stylist
         private static void ApplyButtonStyle<T>(ButtonStyleData style, UIReference<T> reference)
             where T : Button
         {
+            ApplySelectableStyle(style, reference);
+        }
+        
+        private static void ApplyInputFieldStyle<T>(InputFieldStyleData style, UIReference<T> reference)
+            where T : InputField
+        {
+            reference.value.caretBlinkRate = style.caretBlinkRate;
+            reference.value.caretWidth = style.caretWidth;
+            reference.value.selectionColor = style.selectionColor;
+
+            // use custom caret color if property set
+            reference.value.customCaretColor = style.caretColor.IsResolved;
+            
+            ApplySelectableStyle(style, reference);
+        }
+
+        private static void ApplySliderStyle<T>(SliderStyleData style, UIReference<T> reference)
+            where T : Slider
+        {
+            ApplySelectableStyle(style, reference);
+        }
+        
+        private static void ApplyDropdownStyle<T>(DropdownStyleData style, UIReference<T> reference)
+            where T : Dropdown
+        {
+            reference.value.alphaFadeSpeed = style.alphaFadeSpeed;
+            
             ApplySelectableStyle(style, reference);
         }
         
@@ -174,45 +212,45 @@ namespace ThreeDISevenZeroR.Stylist
             switch (style.shadowType.resolvedValue)
             {
                 case GraphicStyleData.ShadowType.None:
-                    if (reference.shadowComponent)
+                    if (reference.shadow)
                     {
-                        Object.DestroyImmediate(reference.shadowComponent);
-                        reference.shadowComponent = null;
+                        Destroy(reference.shadow);
+                        reference.shadow = null;
                     }
 
                     break;
 
                 case GraphicStyleData.ShadowType.Shadow:
-                    if (!reference.shadowComponent || reference.shadowComponent.GetType() != typeof(Shadow))
+                    if (!reference.shadow || reference.shadow.GetType() != typeof(Shadow))
                     {
-                        Object.DestroyImmediate(reference.shadowComponent);
-                        reference.shadowComponent = gameObject.AddComponent<Shadow>();
+                        Destroy(reference.shadow);
+                        reference.shadow = gameObject.AddComponent<Shadow>();
                     }
 
                     break;
 
                 case GraphicStyleData.ShadowType.Outline:
-                    if (!reference.shadowComponent || reference.shadowComponent.GetType() != typeof(Outline))
+                    if (!reference.shadow || reference.shadow.GetType() != typeof(Outline))
                     {
-                        Object.DestroyImmediate(reference.shadowComponent);
-                        reference.shadowComponent = gameObject.AddComponent<Outline>();
+                        Destroy(reference.shadow);
+                        reference.shadow = gameObject.AddComponent<Outline>();
                     }
 
                     break;
             }
 
-            if (!reference.shadowComponent)
+            if (!reference.shadow)
                 return;
             
             // shadow marks layout as dirty on value update, don't update without changes
-            if(reference.shadowComponent.effectColor != style.shadowColor) 
-                reference.shadowComponent.effectColor = style.shadowColor;
+            if(reference.shadow.effectColor != style.shadowColor) 
+                reference.shadow.effectColor = style.shadowColor;
             
-            if(reference.shadowComponent.effectDistance != style.shadowDistance) 
-                reference.shadowComponent.effectDistance = style.shadowDistance;
+            if(reference.shadow.effectDistance != style.shadowDistance) 
+                reference.shadow.effectDistance = style.shadowDistance;
 
-            if(reference.shadowComponent.useGraphicAlpha != style.shadowUseGraphicAlpha) 
-                reference.shadowComponent.useGraphicAlpha = style.shadowUseGraphicAlpha;
+            if(reference.shadow.useGraphicAlpha != style.shadowUseGraphicAlpha) 
+                reference.shadow.useGraphicAlpha = style.shadowUseGraphicAlpha;
         }
 
         private static void ApplyLayout<T>(ElementStyleData style, UIReference<T> behaviour)
@@ -240,7 +278,7 @@ namespace ThreeDISevenZeroR.Stylist
                             preferredWidth >= 0 || preferredHeight >= 0 || 
                             flexibleWidth >= 0 || flexibleHeight >= 0;
 
-            if (UpdateComponent(ref reference.layoutElement, useLayout))
+            if (UpdateComponent(reference.value, ref reference.layoutElement, useLayout))
             {
                 reference.layoutElement.minWidth = minWidth;
                 reference.layoutElement.minHeight = minHeight;
@@ -260,27 +298,27 @@ namespace ThreeDISevenZeroR.Stylist
             var useFitter = horizontalFit != ContentSizeFitter.FitMode.Unconstrained || 
                             verticalFit != ContentSizeFitter.FitMode.Unconstrained;
             
-            if (UpdateComponent(ref reference.sizeFitter, useFitter))
+            if (UpdateComponent(reference.value, ref reference.sizeFitter, useFitter))
             {
                 reference.sizeFitter.horizontalFit = horizontalFit;
                 reference.sizeFitter.verticalFit = verticalFit;
             }
         }
 
-        private static bool UpdateComponent<T>(ref T behaviour, bool isActive)
+        private static bool UpdateComponent<T>(MonoBehaviour value, ref T behaviour, bool isActive)
             where T : Component
         {
             if (isActive)
             {
                 if (!behaviour)
-                    behaviour = behaviour.gameObject.AddComponent<T>();
+                    behaviour = value.gameObject.AddComponent<T>();
 
                 return true;
             }
 
             if (behaviour)
             {
-                Object.DestroyImmediate(behaviour);
+                Destroy(behaviour);
                 behaviour = null;
             }
             
@@ -296,6 +334,24 @@ namespace ThreeDISevenZeroR.Stylist
 
             apply(style, data);
             ApplyLayout(style, data);
+        }
+
+        /// <summary>
+        /// Destroys object in edit or play mode
+        /// </summary>
+        public static void Destroy(Object obj)
+        {
+            if (!obj)
+                return;
+            
+            if (Application.isPlaying)
+            {
+                Object.Destroy(obj);
+            }
+            else
+            {
+                Object.DestroyImmediate(obj);
+            }
         }
 
         public static HashSet<object> GetPooledHashSet()

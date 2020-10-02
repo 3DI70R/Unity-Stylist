@@ -21,7 +21,7 @@ namespace ThreeDISevenZeroR.Stylist
             None, Shadow, Outline
         }
 
-        public override void Resolve(StyleResolver<ElementStyleData> resolver)
+        public override void Resolve(StyleResolver<StyleData> resolver)
         {
             base.Resolve(resolver);
 
