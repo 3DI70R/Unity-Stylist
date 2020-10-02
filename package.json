@@ -1,6 +1,6 @@
 {
   "name": "ru.threedisevenzeror.stylist",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "displayName": "Stylist",
   "description": "Styling library for UGUI",
   "unity": "2020.1",

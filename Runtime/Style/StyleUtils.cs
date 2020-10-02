@@ -203,12 +203,16 @@ namespace ThreeDISevenZeroR.Stylist
 
             if (!reference.shadowComponent)
                 return;
-
+            
+            // shadow marks layout as dirty on value update, don't update without changes
             if(reference.shadowComponent.effectColor != style.shadowColor) 
                 reference.shadowComponent.effectColor = style.shadowColor;
             
             if(reference.shadowComponent.effectDistance != style.shadowDistance) 
                 reference.shadowComponent.effectDistance = style.shadowDistance;
+
+            if(reference.shadowComponent.useGraphicAlpha != style.shadowUseGraphicAlpha) 
+                reference.shadowComponent.useGraphicAlpha = style.shadowUseGraphicAlpha;
         }
 
         private static void ApplyLayout<T>(ElementStyleData style, UIReference<T> behaviour)

@@ -42,7 +42,6 @@ namespace ThreeDISevenZeroR.Stylist
 
             base.OnInspectorGUI();
             
-            EditorGUILayout.Space();
             EditorGUILayout.LabelField(legendLabel, EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             DrawLegend(defaultPropertyName, defaultPropertyDescription, Color.clear);

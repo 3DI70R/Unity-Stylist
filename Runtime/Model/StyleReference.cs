@@ -7,6 +7,8 @@ namespace ThreeDISevenZeroR.Stylist
         where O : ElementStyleData, new()
     {
         public InheritedStyles inherits;
+        
+        [FlattenAttribute]
         public O overrides;
 
         public static implicit operator O(StyleReference<O> reference) => reference.overrides;

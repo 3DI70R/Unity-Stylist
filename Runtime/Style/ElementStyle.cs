@@ -40,6 +40,7 @@ namespace ThreeDISevenZeroR.Stylist
         where T : ElementStyleData
     {
 #pragma warning disable 649
+        [FlattenAttribute]
         [SerializeField] private T overrides;
 #pragma warning restore 649
         

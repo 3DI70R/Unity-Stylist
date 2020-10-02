@@ -10,6 +10,7 @@ namespace ThreeDISevenZeroR.Stylist
         public StyleProperty<ShadowType> shadowType = ShadowType.None;
         public StyleProperty<Vector2> shadowDistance = new Vector2(1f, -1f);
         public StyleProperty<Color> shadowColor = new Color(0f, 0f, 0f, 0.5f);
+        public StyleProperty<bool> shadowUseGraphicAlpha = true;
         
         [Header("Visual")] 
         public StyleProperty<Color> color = Color.white;
@@ -28,6 +29,7 @@ namespace ThreeDISevenZeroR.Stylist
             graphicResolver.Resolve(ref shadowType, d => d.shadowType);
             graphicResolver.Resolve(ref shadowDistance, d => d.shadowDistance);
             graphicResolver.Resolve(ref shadowColor, d => d.shadowColor);
+            graphicResolver.Resolve(ref shadowUseGraphicAlpha, d => d.shadowUseGraphicAlpha);
             
             graphicResolver.Resolve(ref color, d => d.color);
             graphicResolver.Resolve(ref material, d => d.material);
