@@ -9,13 +9,20 @@ namespace ThreeDISevenZeroR.Stylist
         where T : MonoBehaviour
     {
         public T value;
-        
-        // Cached properties
-        // also UIReferencePropertyDrawer assigns those on value change, so if object already had one of these
-        // it will be automatically picked
+
         public Shadow shadow;
         public LayoutElement layoutElement;
         public ContentSizeFitter sizeFitter;
+
+        public virtual void UpdateReferences()
+        {
+            if(!value)
+                return;
+            
+            value.TryGetComponent(out layoutElement);
+            value.TryGetComponent(out shadow);
+            value.TryGetComponent(out sizeFitter);
+        }
 
         public static implicit operator T(UIReference<T> reference) => reference?.value;
         public static implicit operator UIReference<T>(T value) => new UIReference<T> { value = value };

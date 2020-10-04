@@ -332,6 +332,9 @@ namespace ThreeDISevenZeroR.Stylist
             if(!data.value)
                 return;
 
+            if(!Application.isPlaying) 
+                data.UpdateReferences();
+            
             apply(style, data);
             ApplyLayout(style, data);
         }
