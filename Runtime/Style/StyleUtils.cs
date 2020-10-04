@@ -11,7 +11,7 @@ namespace ThreeDISevenZeroR.Stylist
     public static class StyleUtils
     {
         private static readonly Stack<HashSet<object>> hashSetPool = new Stack<HashSet<object>>();
-        private static readonly HashSet<object> visitedObjectsSet = new HashSet<object>();
+        private static readonly HashSet<GameObject> visitedObjectsSet = new HashSet<GameObject>();
 
         private delegate void StyleApplyFunc<S, T>(S style, UIReference<T> reference) 
             where T : MonoBehaviour;
@@ -256,7 +256,7 @@ namespace ThreeDISevenZeroR.Stylist
         private static void ApplyLayout<T>(ElementStyleData style, UIReference<T> behaviour)
             where T : MonoBehaviour
         {
-            if (visitedObjectsSet.Add(style))
+            if (behaviour.value && visitedObjectsSet.Add(behaviour.value.gameObject))
             {
                 ApplyLayoutElement(style, behaviour);
                 ApplyContentSizeFitter(style, behaviour);
